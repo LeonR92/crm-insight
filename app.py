@@ -1,4 +1,6 @@
 import fastapi
+from fastapi import Request
+from fastapi.templating import Jinja2Templates
 
 from agent.agent import run_simple_360
 from database import session
@@ -7,10 +9,12 @@ from service_layer.reports_query import get_report_analysis_payload
 
 app = fastapi.FastAPI()
 
+templates = Jinja2Templates(directory="templates")
+
 
 @app.get("/")
-def hello_world():
-    return {"message": "Hello, World!"}
+def hello_world(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get(
