@@ -14,9 +14,45 @@
         Welcome to CRM Insight
       </h1>
 
-      {% include 'form.html' %}
-
-      <section>answer</section>
+      {% include 'form.html' %} {% include 'answer.html' %}
     </div>
   </body>
+
+  <script>
+    async function generateInsights() {
+      // 1. Get references to elements
+      const companyId = document.getElementById("company").value;
+      const areaId = document.getElementById("area").value;
+      const container = document.getElementById("answer-container");
+      const content = document.getElementById("answer-content");
+
+      // 2. Show container and loading state
+      container.classList.remove("hidden");
+      content.innerHTML =
+        '<p class="animate-pulse text-gray-400">Analyzing data...</p>';
+
+      try {
+        // 3. Fetch from FastAPI
+        const response = await fetch(`/prompt/${companyId}/${areaId}`);
+
+        if (!response.ok)
+          throw new Error(
+            "Insights could not be generated for this selection."
+          );
+
+        const data = await response.json();
+
+        content.innerHTML =
+          typeof data === "string"
+            ? data
+            : `<pre class="bg-gray-50 p-4 rounded text-sm overflow-auto">${JSON.stringify(
+                data,
+                null,
+                2
+              )}</pre>`;
+      } catch (error) {
+        content.innerHTML = `<p class="text-red-500 font-medium">Error: ${error.message}</p>`;
+      }
+    }
+  </script>
 </html>
