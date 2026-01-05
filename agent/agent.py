@@ -2,10 +2,10 @@ from typing import List
 
 from pydantic import BaseModel, Field, computed_field
 from pydantic_ai import Agent, ModelSettings
+from sqlalchemy.orm import Session
 
-from ai_model import model
-from config import TEMPERATURE
-from database import session
+from agent.ai_model import TEMPERATURE, model
+from agent.prompt import PROMPT
 from service_layer.kpi_query import (
     KPISchema,
     get_kpis_by_insurance_company_and_practice_area,
@@ -38,53 +38,15 @@ class Insurance360Output(BaseModel):
     citations: List[Citation] = Field(default_factory=list)
 
 
-system_prompt = """
-    Your input fields are:
-1. `company_id` (str): Unique ID of the insurance company
-2. `area_id` (str): Unique ID of the practice area
-3. `kpis` (str): List of quantitative KPI data
-4. `reports` (str): List of qualitative visit reports
-Your output fields are:
-1. `reasoning` (str): 
-2. `output` (Insurance360Output): The structured analysis result
-All interactions will be structured in the following way, with the appropriate values filled in.
-
-[[ ## company_id ## ]]
-{company_id}
-
-[[ ## area_id ## ]]
-{area_id}
-
-[[ ## kpis ## ]]
-{kpis}
-
-[[ ## reports ## ]]
-{reports}
-
-[[ ## reasoning ## ]]
-{reasoning}
-
-[[ ## output ## ]]
-{output}      
-In adhering to this structure, your objective is: 
-        You are a Senior Insurance Analyst. Analyze the provided KPI and Report data.
-        Provide a professional summary in German.
-        
-        STRICT CITATION RULES:
-        1. Every claim must be cited using square brackets, e.g., [KPI-1] or URL.
-        2. For every citation object, use the exact company_id and area_id provided.
-        3. Ensure all cited IDs are listed in the final 'citations' field.
-"""
-
 simple_agent = Agent(
     model,
     output_type=Insurance360Output,
-    system_prompt=system_prompt,
+    system_prompt=PROMPT,
     model_settings=ModelSettings(temperature=TEMPERATURE),
 )
 
 
-def run_simple_360(company_id: int, area_id: int):
+def run_simple_360(session: Session, company_id: int, area_id: int):
     kpis = get_kpis_by_insurance_company_and_practice_area(session, company_id, area_id)
     reports = get_report_analysis_payload(session, company_id, area_id)
 
@@ -97,12 +59,3 @@ def run_simple_360(company_id: int, area_id: int):
 
     result = simple_agent.run_sync(prompt)
     return result.output
-
-
-if __name__ == "__main__":
-
-    final_data = run_simple_360(3, 4)
-    print(f"Executive Summary: {final_data.final_executive_summary}")
-
-    if final_data.citations:
-        print(f"Sample Citation URL: {final_data.citations[0].url}")
