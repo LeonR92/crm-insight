@@ -78,7 +78,7 @@ In adhering to this structure, your objective is:
 
 simple_agent = Agent(
     model,
-    output_type=Insurance360Output,  # Note: result_type is the standard Pydantic AI parameter
+    output_type=Insurance360Output,
     system_prompt=system_prompt,
     model_settings=ModelSettings(temperature=TEMPERATURE),
 )

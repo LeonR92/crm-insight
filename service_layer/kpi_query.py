@@ -27,17 +27,6 @@ class KPISchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class KPIAIOutput(BaseModel):
-    """Finaler Report für PydanticAI."""
-
-    insurance_company_name: str
-    practice_area_name: str
-    data: List[KPISchema]
-    summary_german: str = Field(..., description="Management-Summary auf Deutsch")
-
-    model_config = ConfigDict(from_attributes=True)
-
-
 def get_kpis_by_insurance_company_and_practice_area(
     session: Session, insurance_company_id: int, practice_area_id: int
 ) -> List[KPISchema]:
