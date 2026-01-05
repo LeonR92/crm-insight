@@ -19,39 +19,127 @@
   </body>
 
   <script>
+    const UI = {
+      // KPI Section: Clean rows with subtle dividers
+      KpiSection: (kpis) => {
+        const kpi = kpis[0];
+        const items = [
+          {
+            label: "Incoming Fees",
+            value: `€${kpi.incoming_fees.toLocaleString()}`,
+          },
+          {
+            label: "Fees Collected",
+            value: `€${kpi.fees_collected.toLocaleString()}`,
+          },
+          { label: "New Mandates", value: kpi.new_mandates },
+        ];
+        return `
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 border-y border-gray-100 py-6">
+        ${items
+          .map(
+            (item) => `
+          <div>
+            <dt class="text-sm font-medium text-gray-500">${item.label}</dt>
+            <dd class="mt-1 text-2xl font-bold tracking-tight text-gray-900">${item.value}</dd>
+          </div>
+        `
+          )
+          .join("")}
+      </div>`;
+      },
+
+      // Analysis Section: Clean typography
+      TextSection: (title, content) => `
+    <div>
+      <h3 class="text-sm font-semibold text-gray-900">${title}</h3>
+      <p class="mt-2 text-sm leading-6 text-gray-600">${content}</p>
+    </div>`,
+
+      // Visit Reports: Matching the form's input-like structure
+      VisitReports: (reports) => {
+        if (!reports.length) return "";
+        return `
+      <div class="space-y-4">
+        <h3 class="text-sm font-semibold text-gray-900">Field Activity</h3>
+        <div class="overflow-hidden bg-white border border-gray-200 rounded-md shadow-sm">
+          <ul role="list" class="divide-y divide-gray-200">
+            ${reports
+              .map(
+                (r) => `
+              <li class="p-4">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-medium text-indigo-600">${
+                    r.department_visited
+                  }</p>
+                  <p class="text-xs text-gray-400">${new Date(
+                    r.report_date
+                  ).toLocaleDateString()}</p>
+                </div>
+                <p class="mt-1 text-sm text-gray-600">${r.report_content}</p>
+                <p class="mt-2 text-xs text-gray-400">Personnel: ${
+                  r.visited_key_personnel
+                }</p>
+              </li>
+            `
+              )
+              .join("")}
+          </ul>
+        </div>
+      </div>`;
+      },
+    };
+
     async function generateInsights() {
-      // 1. Get references to elements
-      const companyId = document.getElementById("company").value;
-      const areaId = document.getElementById("area").value;
       const container = document.getElementById("answer-container");
       const content = document.getElementById("answer-content");
 
-      // 2. Show container and loading state
+      // Show loading state matching form typography
       container.classList.remove("hidden");
       content.innerHTML =
-        '<p class="animate-pulse text-gray-400">Analyzing data...</p>';
+        '<p class="text-sm text-gray-400 animate-pulse">Synthesizing data points...</p>';
 
       try {
-        // 3. Fetch from FastAPI
-        const response = await fetch(`/prompt/${companyId}/${areaId}`);
-
-        if (!response.ok)
-          throw new Error(
-            "Insights could not be generated for this selection."
-          );
-
+        const response = await fetch(
+          `/prompt/${document.getElementById("company").value}/${
+            document.getElementById("area").value
+          }`
+        );
         const data = await response.json();
 
-        content.innerHTML =
-          typeof data === "string"
-            ? data
-            : `<pre class="bg-gray-50 p-4 rounded text-sm overflow-auto">${JSON.stringify(
-                data,
-                null,
-                2
-              )}</pre>`;
+        // Set Title/Subtitle dynamically
+        document.getElementById(
+          "report-title"
+        ).innerText = `${data.insurance_company_name} Insights`;
+        document.getElementById(
+          "report-subtitle"
+        ).innerText = `Strategic analysis for ${data.practice_area_name}`;
+
+        // Construct the Report
+        content.innerHTML = `
+      ${UI.KpiSection(data.kpi_data)}
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+        ${UI.TextSection("KPI Analysis", data.kpi_analysis)}
+        ${UI.TextSection("Operational Analysis", data.report_analysis)}
+      </div>
+
+      ${UI.TextSection("Executive Summary", data.final_executive_summary)}
+
+      ${UI.VisitReports(data.visit_reports)}
+
+      <div class="pt-6 border-t border-gray-100 flex gap-4">
+        ${data.citations
+          .map(
+            (c) => `
+          <a href="${c.url}" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">Source ${c.source_id} &rarr;</a>
+        `
+          )
+          .join("")}
+      </div>
+    `;
       } catch (error) {
-        content.innerHTML = `<p class="text-red-500 font-medium">Error: ${error.message}</p>`;
+        content.innerHTML = `<p class="text-sm text-red-500">Error: ${error.message}</p>`;
       }
     }
   </script>
