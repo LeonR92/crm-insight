@@ -1,7 +1,6 @@
 from datetime import datetime
-from typing import List
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session, joinedload
 
 from database import Report
@@ -19,15 +18,6 @@ class ReportSchema(BaseModel):
     report_content: str
 
     model_config = ConfigDict(from_attributes=True)
-
-
-class ReportAIOutput(BaseModel):
-    """Final output for the AI."""
-
-    insurance_company_name: str
-    practice_area_name: str
-    reports: List[ReportSchema]
-    qualitative_summary: str = Field(description="Zusammenfassung auf Deutsch")
 
 
 def get_report_analysis_payload(
