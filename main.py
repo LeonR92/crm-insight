@@ -1,9 +1,10 @@
 from typing import List
 
 from pydantic import BaseModel, Field
-from pydantic_ai import Agent
+from pydantic_ai import Agent, ModelSettings
 
 from ai_model import model
+from config import TEMPERATURE
 from database import session
 from service_layer.kpi_query import (
     KPISchema,
@@ -36,6 +37,7 @@ simple_agent = Agent(
         "You are a Senior Insurance Analyst. Analyze the provided KPI data and "
         "visit reports to create a combined executive summary in German."
     ),
+    model_settings=ModelSettings(temperature=TEMPERATURE),
 )
 
 
