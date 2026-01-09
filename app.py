@@ -29,24 +29,63 @@ templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
 
-def get_current_user():
-    response = supabase.auth.sign_in_with_password(
-        {"email": "leonjy92@gmail.com", "password": "AWyFH48GlkibXn20"}
-    )
-    token = response.session.access_token
+def get_current_user(request: Request):
+    # 1. Try to get token from Header (Bearer) or Cookie
+    token = request.cookies.get("access_token")
+    if not token:
+        auth_header = request.headers.get("Authorization")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
+
     try:
-        user = supabase.auth.get_user(token)
-        return user.user
+        # 2. Ask Supabase to verify the token
+        user_data = supabase.auth.get_user(token)
+        return user_data.user
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
+            detail="Invalid or expired session",
         )
 
 
-@app.get("/me", tags=["Authentication"])
-def get_my_profile(user=Depends(get_current_user)):
-    return user
+def require_role(allowed_roles: list[str]):
+    def role_checker(user=Depends(get_current_user)):
+        user_role = user.app_metadata.get("role", "user")
+        if user_role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Role '{user_role}' does not have access here.",
+            )
+        return user
+
+    return role_checker
+
+
+@app.get("/auth/callback")
+def auth_callback(request: Request):
+    return templates.TemplateResponse("callback.html", {"request": request})
+
+
+@app.get("/me")
+def read_me(user=Depends(get_current_user)):
+    return {"email": user.email, "role": user.app_metadata.get("role")}
+
+
+@app.get("/welcome")
+def welcome_page(request: Request):
+    return templates.TemplateResponse(
+        "welcome.html",
+        {
+            "request": request,
+            "supabase_url": os.getenv("SUPABASE_URL"),
+            "supabase_key": os.getenv("SUPABASE_ANON_KEY"),
+        },
+    )
 
 
 @app.get("/")
