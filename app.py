@@ -4,6 +4,10 @@ from fastapi.templating import Jinja2Templates
 
 from agent.agent import run_simple_360
 from database import session
+from service_layer.dropdown_queries import (
+    get_insurance_companies_for_dropdowns,
+    get_practice_areas_for_dropdowns,
+)
 from service_layer.kpi_query import get_kpis_by_insurance_company_and_practice_area
 from service_layer.reports_query import get_report_analysis_payload
 
@@ -14,7 +18,16 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 def hello_world(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    insurance_companies = get_insurance_companies_for_dropdowns(session)
+    practice_areas = get_practice_areas_for_dropdowns(session)
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "insurance_companies": insurance_companies,
+            "practice_areas": practice_areas,
+        },
+    )
 
 
 @app.get(
