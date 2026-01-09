@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>CRM Insight</title>
+    <title>Dummy CRM</title>
   </head>
   <body>
     {% include 'navbar.html' %}
 
     <div class="container mx-auto mt-8 px-4 sm:px-6 lg:px-8">
       <h1 class="text-4xl tracking-tight font-bold text-gray-900 mb-4">
-        Welcome to CRM Insight
+        Dummy CRM Seite
       </h1>
 
       {% include 'form.html' %} {% include 'answer.html' %}
@@ -25,14 +25,14 @@
         const kpi = kpis[0];
         const items = [
           {
-            label: "Incoming Fees",
+            label: "Geldeingang",
             value: `€${kpi.incoming_fees.toLocaleString()}`,
           },
           {
-            label: "Fees Collected",
+            label: "Eingegangene Gebühren",
             value: `€${kpi.fees_collected.toLocaleString()}`,
           },
-          { label: "New Mandates", value: kpi.new_mandates },
+          { label: "Neue Mandate", value: kpi.new_mandates },
         ];
         return `
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 border-y border-gray-100 py-6">
@@ -61,7 +61,7 @@
         if (!reports.length) return "";
         return `
       <div class="space-y-4">
-        <h3 class="text-sm font-semibold text-gray-900">Field Activity</h3>
+        <h3 class="text-sm font-semibold text-gray-900">Vergangene Berichte</h3>
         <div class="overflow-hidden bg-white border border-gray-200 rounded-md shadow-sm">
           <ul role="list" class="divide-y divide-gray-200">
             ${reports
@@ -110,21 +110,21 @@
         // Set Title/Subtitle dynamically
         document.getElementById(
           "report-title"
-        ).innerText = `${data.insurance_company_name} Insights`;
+        ).innerText = `${data.insurance_company_name} Zusammenfassung`;
         document.getElementById(
           "report-subtitle"
-        ).innerText = `Strategic analysis for ${data.practice_area_name}`;
+        ).innerText = `Strategische Analyse für ${data.practice_area_name}`;
 
         // Construct the Report
         content.innerHTML = `
       ${UI.KpiSection(data.kpi_data)}
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
-        ${UI.TextSection("KPI Analysis", data.kpi_analysis)}
-        ${UI.TextSection("Operational Analysis", data.report_analysis)}
+        ${UI.TextSection("KPI-Analyse", data.kpi_analysis)}
+        ${UI.TextSection("Berichtsanalyse", data.report_analysis)}
       </div>
 
-      ${UI.TextSection("Executive Summary", data.final_executive_summary)}
+      ${UI.TextSection("Zusammenfassung", data.final_executive_summary)}
 
       ${UI.VisitReports(data.visit_reports)}
 
