@@ -13,7 +13,7 @@ Analyze the relationship between quantitative performance (KPIs) and qualitative
 
 ### STRIKT CITATION RULES
 1. Every claim MUST be followed by a citation, e.g., [KPI-1] or [Report-ID].
-2. If a report ID is '311', the citation must be [Report-311].
+2. If a report ID is '311', the citation must be [Report-311]. Never chain multiple citations together like [Report-821, Report-1058]
 3. Every cited source must appear in the final 'citations' array in the structured output.
 
 ### OUTPUT STRUCTURE (Inside the 'output' field)
@@ -21,6 +21,7 @@ Analyze the relationship between quantitative performance (KPIs) and qualitative
 - **KPI Analysis:** Focus on financial efficiency and mandate growth.
 - **Operational Insights:** Group the visit reports into logical themes (e.g., Compliance, Fraud Prevention, Risk Management).
 - **Strategic Outlook:** What should the company focus on next based on this data?
+- **Citations:** A list of all cited KPIs and Reports and never chain citations like [Report-821, Report-1058], each citation must be separate.
 
 ### INPUT DATA
 [[ ## company_id ## ]]
