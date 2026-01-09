@@ -13,7 +13,6 @@ config = context.config
 
 db_url = os.getenv("DATABASE_URL")
 
-# 5. Overwrite the config
 if db_url:
     config.set_main_option("sqlalchemy.url", db_url)
 
