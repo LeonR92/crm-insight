@@ -33,7 +33,7 @@ def populate_database(number_of_rows: int):
     Base.metadata.create_all(engine)
     clear_database()
 
-    # 1. Create Practice Areas
+    # 1. Practice Areas
     practice_names = [
         "Verkehrsrecht",
         "Haftpflichtrecht",
@@ -47,9 +47,9 @@ def populate_database(number_of_rows: int):
     ]
     p_areas = [PracticeArea(name=name) for name in practice_names]
     session.add_all(p_areas)
-    session.flush()  # Flush to get IDs without committing full transaction yet
+    session.flush()
 
-    # 2. Create Insurance Companies
+    # 2. Insurance Companies
     insurance_names = [
         "Allianz SE",
         "AXA Konzern AG",
@@ -68,7 +68,6 @@ def populate_database(number_of_rows: int):
     session.flush()
 
     # 3. Create THE COMBINATION (KPIs)
-    # This ensures that every report generated later belongs to a valid Co/Area pair
     print("Generating KPI data (The Matrix)...")
     active_combinations = []
 
@@ -89,35 +88,98 @@ def populate_database(number_of_rows: int):
                 fees_collected=collected,
             )
             session.add(kpi)
-            # Store the valid combinations for the Report generation
             active_combinations.append((co, area))
 
-    # 4. Generate Reports based ON THOSE COMBINATIONS
-    print(f"Generating {number_of_rows} Reports based on combinations...")
+    # 4. Generate Reports based on those valid combinations
+    print(f"Generating {number_of_rows} Reports...")
+
+    departments = [
+        "Schadenabteilung",
+        "Rechtsabteilung",
+        "Betrugsprävention",
+        "Zentraler Regress",
+        "Compliance",
+        "Key Account",
+    ]
+    cities = [
+        "Berlin",
+        "München",
+        "Hamburg",
+        "Köln",
+        "Frankfurt",
+        "Stuttgart",
+        "Hannover",
+        "Düsseldorf",
+    ]
 
     report_templates = [
+        # Strategie & Akquise
         "Strategiemeeting mit {co_name} in {city}. {person} plant die Ausweitung der Zusammenarbeit im Bereich {area}.",
+        "Vorstellung unserer neuen digitalen Schnittstelle in der {dept}. Ziel ist die papierlose Aktenübertragung bei {area}-Fällen.",
+        "Pitch-Termin bei der {dept}. Diskussion über Pauschalhonorar-Modelle für standardisierte {area}-Verfahren.",
+        "Marktanalyse mit {person}: Wettbewerbsvergleich der Schadenquoten im Segment {area}.",
+        "Sondierungsgespräch über die Übernahme eines Altschaden-Portfolios im Bereich {area}.",
+        "Diskussion über Kapazitätserweiterungen: {co_name} benötigt zusätzliche Ressourcen in der {dept}.",
+        "Präsentation der Kanzlei-Erfolgsbilanz vor dem Vorstand. Fokus auf Kosteneinsparung bei {area}.",
+        "Abstimmung über Key-Performance-Indikatoren (KPI) für das nächste Quartal mit {person}.",
+        # Fachliches & Recht
+        "Inhouse-Schulung für Sachbearbeiter der {dept}. Thema: 'Aktuelle Beweislastumkehr im {area}'.",
+        "Sonderbericht zu einer Grundsatzentscheidung im {area}. {person} bittet um Einschätzung der Auswirkungen.",
         "Workshop zur Betrugsprävention im Bereich {area}. Identifikation neuer Auffälligkeitsmuster in {city}.",
+        "Fachvortrag zum Thema 'Digitalisierung der Beweisaufnahme' im {area}. {person} war sehr interessiert.",
+        "Update-Termin: Neue Richtlinien der BaFin zur Schadenregulierung im Bereich {area}.",
+        "Deep-Dive-Session: Analyse der Rechtsprechung des OLG zur Kausalität im {area}.",
+        "Erstellung eines Leitfadens für die {dept} zur Erstbewertung von {area}-Schäden.",
+        "Diskussion über die Auswirkungen der neuen Gesetzesänderung auf laufende {area}-Mandate.",
+        # Operatives & Controlling
         "Review der Durchlaufzeiten im Bereich {area}. {person} mahnt eine schnellere Bearbeitung an.",
+        "Audit-Termin durch {co_name}. Die Prüfung der {dept} ergab eine exzellente Einhaltung der SLA.",
         "Besprechung von komplexen Großschadenfällen im {area}. Strategiewechsel durch {person} empfohlen.",
+        "Qualitätskontrolle der Aktenführung in der {dept}. Keine nennenswerten Beanstandungen im {area}.",
+        "Analyse der Prozessverluste im letzten Halbjahr. {person} fordert Ursachenforschung für {area}.",
+        "Abstimmung der Vergleichs-Vollmachten: {co_name} erhöht das Limit für Vergleiche im {area}.",
+        "Reporting-Termin: Vorstellung der Einsparungen durch konsequente Regressprüfung im {area}.",
+        "Prüfung der Rückstellungsbildung für drohende Großschäden im {area} gemeinsam mit der {dept}.",
+        # Beziehungsmanagement
+        "Informeller Austausch mit {person} ({dept}) am Rande der Fachkonferenz in {city}.",
+        "Jahresabschlussgespräch mit der Leitung der {dept}. Dank für die kompetente Vertretung im {area}.",
+        "Klärung von Abrechnungsdifferenzen bei {co_name}. {person} bestätigt die Freigabe der Honorarnoten.",
+        "Lunch-Termin with {person}: Networking und Austausch über Markttrends in der {area}-Sparte.",
+        "Besuch der neuen Räumlichkeiten der {dept}. Kurzes Update zu laufenden Projekten im {area}.",
         "Feedback-Gespräch: {person} lobt die Erreichbarkeit unserer Anwälte bei {area}-Anfragen.",
+        "Teilnahme am Sommerfest von {co_name}. Vertiefung der Kontakte zur gesamten {dept}.",
+        "Glückwünsche zur Beförderung von {person}. Neue Zuständigkeiten im Bereich {area}.",
+        # Sonderfälle
+        "Eilige Prüfung einer Deckungszusage für ein medienwirksames Verfahren im {area}.",
+        "Task-Force-Meeting zur Bekämpfung organisierter Kriminalität im {area}-Sektor der {dept}.",
+        "Unterstützung bei einer internen Revision von {co_name} bezüglich {area}-Prozessen.",
+        "Ad-hoc-Einsatz wegen eines drohenden Reputationsschadens im Bereich {area}.",
+        "Besprechung der Digitalisierungsstrategie 2026 für die Sparte {area} with {person}.",
+        "Vorbereitung einer Panel-Diskussion zum Thema {area} mit Vertretern der {dept}.",
+        "Analyse von Deckungslücken in neuen Versicherungsprodukten der {co_name} ({area}).",
+        "Quartals-Review der Prozesskostenentwicklung im Fachbereich {area}.",
     ]
 
     for i in range(number_of_rows):
-        # IMPORTANT: We pick a valid combination so reports match existing KPIs
+        # Anchor to a valid combination
         co, area = random.choice(active_combinations)
-
-        dept = random.choice(["Schaden", "Recht", "Regress", "Compliance"])
-        city = random.choice(["Berlin", "München", "Hamburg", "Köln"])
+        dept = random.choice(departments)
+        city = random.choice(cities)
         person = (
             f"{fake.prefix()} {fake.last_name()}"
             if random.random() > 0.4
             else fake.name()
         )
 
-        content = random.choice(report_templates).format(
-            area=area.name, person=person, co_name=co.name, city=city
+        # Build full content
+        base_text = random.choice(report_templates).format(
+            area=area.name, person=person, dept=dept, co_name=co.name, city=city
         )
+
+        case_id = (
+            f"{co.name[:2].upper()}-{random.randint(100, 999)}/{random.randint(23, 25)}"
+        )
+        full_report_content = f"Protokoll {case_id}\nOrt: {city} | Prio: {random.choice(['Normal', 'Hoch'])}\n---\n{base_text}"
 
         report = Report(
             insurance_company_id=co.id,
@@ -125,12 +187,17 @@ def populate_database(number_of_rows: int):
             department_visited=dept,
             visited_key_personnel=person,
             report_date=fake.date_time_between(start_date="-2y", end_date="now"),
-            report_content=f"ID: {random.randint(1000,9999)}\n---\n{content}",
+            report_content=full_report_content,
         )
         session.add(report)
 
+        if i % 100 == 0:
+            session.flush()
+
     session.commit()
-    print("Database populated successfully.")
+    print(
+        f"Done! Database populated with {number_of_rows} reports using all templates and correct relational pairs."
+    )
 
 
 if __name__ == "__main__":
