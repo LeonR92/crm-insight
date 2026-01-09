@@ -1,7 +1,12 @@
+import os
+
 import fastapi
-from fastapi import Request
+from dotenv import load_dotenv
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse
+from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
+from supabase import Client, create_client
 
 from agent.agent import run_simple_360
 from database import session
@@ -12,9 +17,36 @@ from service_layer.dropdown_queries import (
 from service_layer.kpi_query import get_kpis_by_insurance_company_and_practice_area
 from service_layer.reports_query import get_report_analysis_payload, get_report_by_id
 
-app = fastapi.FastAPI()
+load_dotenv()
 
+app = fastapi.FastAPI()
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_ANON_KEY")
+if not url or not key:
+    raise ValueError("Missing Supabase credentials in .env file")
+supabase: Client = create_client(url, key)
 templates = Jinja2Templates(directory="templates")
+security = HTTPBearer()
+
+
+def get_current_user():
+    response = supabase.auth.sign_in_with_password(
+        {"email": "leonjy92@gmail.com", "password": "AWyFH48GlkibXn20"}
+    )
+    token = response.session.access_token
+    try:
+        user = supabase.auth.get_user(token)
+        return user.user
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+        )
+
+
+@app.get("/me", tags=["Authentication"])
+def get_my_profile(user=Depends(get_current_user)):
+    return user
 
 
 @app.get("/")
