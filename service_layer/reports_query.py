@@ -58,3 +58,26 @@ def get_report_analysis_payload(
         "practice_area_name": report_list[0].practice_area_name,
         "reports": report_list,
     }
+
+
+def get_report_by_id(session: Session, report_id: int) -> ReportSchema | None:
+    db_report = session.query(Report).filter(Report.id == report_id).first()
+    if not db_report:
+        return None
+    report = ReportSchema(
+        id=db_report.id,
+        insurance_company_name=(
+            db_report.insurance_company.name
+            if db_report.insurance_company
+            else "Unbekannt"
+        ),
+        practice_area_name=(
+            db_report.practice_area.name if db_report.practice_area else "Unbekannt"
+        ),
+        department_visited=db_report.department_visited,
+        visited_key_personnel=db_report.visited_key_personnel,
+        report_date=db_report.report_date,
+        report_content=db_report.report_content,
+    )
+
+    return report

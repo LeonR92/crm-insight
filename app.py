@@ -1,5 +1,6 @@
 import fastapi
 from fastapi import Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from agent.agent import run_simple_360
@@ -9,7 +10,7 @@ from service_layer.dropdown_queries import (
     get_practice_areas_for_dropdowns,
 )
 from service_layer.kpi_query import get_kpis_by_insurance_company_and_practice_area
-from service_layer.reports_query import get_report_analysis_payload
+from service_layer.reports_query import get_report_analysis_payload, get_report_by_id
 
 app = fastapi.FastAPI()
 
@@ -45,6 +46,18 @@ def get_report_overview(
     if not kpis and not reports:
         raise fastapi.HTTPException(status_code=404, detail="Data not found")
     return {"kpis": kpis, "reports": reports}
+
+
+@app.get("/report/{report_id}", response_class=HTMLResponse, tags=["Reports"])
+def get_specific_report(request: Request, report_id: int):
+    report = get_report_by_id(session, report_id)
+
+    if not report:
+        raise fastapi.HTTPException(status_code=404, detail="Report not found")
+
+    return templates.TemplateResponse(
+        "report.html", {"request": request, "report": report}
+    )
 
 
 @app.get(
