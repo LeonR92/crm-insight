@@ -124,6 +124,17 @@ def prompt(company_id: int, area_id: int, db: Session = Depends(get_db)):
     return result
 
 
+@app.get("/analytics")
+def analytics_page(request: Request, user=Depends(get_current_user)):
+    return templates.TemplateResponse(
+        "analytics.html",
+        {
+            "request": request,
+            "user": user,
+        },
+    )
+
+
 @app.get("/logout")
 def logout():
     response = RedirectResponse(url="/")
