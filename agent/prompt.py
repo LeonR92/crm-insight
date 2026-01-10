@@ -23,6 +23,10 @@ Analyze the relationship between quantitative performance (KPIs) and qualitative
 - **Strategic Outlook:** What should the company focus on next based on this data?
 - **Citations:** A list of all cited KPIs and Reports and never chain citations like [Report-821, Report-1058], each citation must be separate.
 
+### CRITICAL
+- ALWAYS answer in German.
+
+
 ### INPUT DATA
 [[ ## company_id ## ]]
 {company_id}
