@@ -42,8 +42,8 @@
           .map(
             (item) => `
           <div>
-            <dt class="text-sm font-medium text-gray-500">${item.label}</dt>
-            <dd class="mt-1 text-2xl font-bold tracking-tight text-gray-900">${item.value}</dd>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">${item.label}</dt>
+            <dd class="mt-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">${item.value}</dd>
           </div>
         `
           )
@@ -54,8 +54,8 @@
       // Analysis Section: Clean typography
       TextSection: (title, content) => `
     <div>
-      <h3 class="text-sm font-semibold text-gray-900">${title}</h3>
-      <p class="mt-2 text-sm leading-6 text-gray-600">${formatCitations(
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white">${title}</h3>
+      <p class="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-400">${formatCitations(
         content
       )}</p>
     </div>`,
@@ -65,25 +65,25 @@
         if (!reports.length) return "";
         return `
       <div class="space-y-4">
-        <h3 class="text-sm font-semibold text-gray-900">Timeline vergangener Berichte</h3>
-        <div class="overflow-hidden bg-white border border-gray-200 rounded-md shadow-sm">
-          <ul role="list" class="divide-y divide-gray-200">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white">Timeline vergangener Berichte</h3>
+        <div class="overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
+          <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
             ${reports
               .map(
                 (r) => `
               <li class="p-4">
                 <div class="flex items-center justify-between">
-                  <p class="text-sm font-medium text-indigo-600">${
+                  <p class="text-sm font-medium text-indigo-600 dark:text-indigo-400">${
                     r.department_visited
                   }</p>
-                  <p class="text-xs text-gray-400">${new Date(
+                  <p class="text-xs text-gray-400 dark:text-gray-500">${new Date(
                     r.report_date
                   ).toLocaleDateString()}</p>
                 </div>
-                <p class="mt-1 text-sm text-gray-600">${formatCitations(
+                <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">${formatCitations(
                   r.report_content
                 )}</p>
-                <p class="mt-2 text-xs text-gray-400">Personnel: ${
+                <p class="mt-2 text-xs text-gray-400 dark:text-gray-500">Personnel: ${
                   r.visited_key_personnel
                 }</p>
               </li>
@@ -98,7 +98,7 @@
     const formatCitations = (text) => {
       return text.replace(/\[Report-(\d+)\]/g, (match, id) => {
         return `
-      <a href="report/${id}" target="_blank" class="inline-flex items-center gap-0.5 text-indigo-600 hover:text-indigo-800 font-medium group">
+      <a href="report/${id}" target="_blank" class="inline-flex items-center gap-0.5 text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium group">
         ${match}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-3 transition-transform group-hover:-translate-y-0.5">
           <path d="M12.232 4.232a2.5 2.5 0 0 1 3.536 3.536l-1.225 1.224a.75.75 0 0 0 1.061 1.06l1.224-1.224a4 4 0 0 0-5.656-5.656l-3 3a4 4 0 0 0 .225 5.865.75.75 0 0 0 .977-1.138 2.5 2.5 0 0 1-.142-3.667l3-3Z" />
@@ -115,7 +115,7 @@
       // Show loading state matching form typography
       container.classList.remove("hidden");
       content.innerHTML =
-        '<p class="text-sm text-gray-400 animate-pulse">Synthesizing data points...</p>';
+        '<p class="text-sm text-gray-400 dark:text-gray-600 animate-pulse">Synthesizing data points...</p>';
 
       try {
         const response = await fetch(
@@ -150,14 +150,14 @@
         ${data.citations
           .map(
             (c) => `
-          <a href="${c.url}" class="text-xs font-medium text-indigo-600 hover:text-indigo-500">Source ${c.source_id} &rarr;</a>
+          <a href="${c.url}" class="text-xs font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">Source ${c.source_id} &rarr;</a>
         `
           )
           .join("")}
       </div>
     `;
       } catch (error) {
-        content.innerHTML = `<p class="text-sm text-red-500">Error: ${error.message}</p>`;
+        content.innerHTML = `<p class="text-sm text-red-500 dark:text-red-400">Error: ${error.message}</p>`;
       }
     }
   </script>
