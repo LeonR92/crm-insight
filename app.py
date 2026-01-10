@@ -159,8 +159,8 @@ def profile(request: Request, user=Depends(get_current_user)):
 
 
 @app.get("/about")
-def about(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
+def about(request: Request, user=Depends(get_current_user)):
+    return templates.TemplateResponse("about.html", {"request": request, "user": user})
 
 
 @app.get("/logout")
