@@ -144,9 +144,3 @@ def prompt_test(
     if not result:
         raise fastapi.HTTPException(status_code=404, detail="Data not found")
     return result
-
-
-if __name__ == "__main__":
-    import uvicorn
-
-    uvicorn.run(app, host="0.0.0.0", port=8000)
