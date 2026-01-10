@@ -69,7 +69,7 @@ def welcome_page(request: Request):
 
 
 @app.get("/", dependencies=[Depends(get_current_user)])
-def dashboard(request: Request):
+def dashboard(request: Request, user=Depends(get_current_user)):
     insurance_companies = get_insurance_companies_for_dropdowns(session)
     practice_areas = get_practice_areas_for_dropdowns(session)
     return templates.TemplateResponse(
@@ -78,6 +78,7 @@ def dashboard(request: Request):
             "request": request,
             "insurance_companies": insurance_companies,
             "practice_areas": practice_areas,
+            "user": user,
         },
     )
 
