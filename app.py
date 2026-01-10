@@ -30,7 +30,6 @@ security = HTTPBearer()
 
 
 def get_current_user(request: Request):
-    # 1. Try to get token from Header (Bearer) or Cookie
     token = request.cookies.get("access_token")
     if not token:
         auth_header = request.headers.get("Authorization")
