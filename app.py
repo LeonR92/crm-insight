@@ -3,10 +3,9 @@ import os
 import fastapi
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
-from starlette.middleware.base import BaseHTTPMiddleware
 from supabase import Client, create_client
 
 from agent.agent import run_simple_360
@@ -29,21 +28,9 @@ templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
 
-class AuthRedirectMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request, call_next):
-        response = await call_next(request)
-
-        if response.status_code == 401:
-            if "text/html" in request.headers.get("Accept", ""):
-                return RedirectResponse(url="/welcome")
-
-        return response
-
-
-app.add_middleware(AuthRedirectMiddleware)
-
-
 def get_current_user(request: Request):
+    if request.url.hostname in ["localhost", "127.0.0.1"]:
+        return None
     token = request.cookies.get("access_token")
     if not token:
         auth_header = request.headers.get("Authorization")
