@@ -142,7 +142,7 @@ def analytics_api(db: Session = Depends(get_db)):
 
 
 @app.get("/profile")
-def profile_page(request: Request, user=Depends(get_current_user)):
+def profile(request: Request, user=Depends(get_current_user)):
     if not user:
         return templates.TemplateResponse(
             "profile.html", {"request": request, "user": {}, "metadata": {}}
