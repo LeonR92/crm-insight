@@ -12,18 +12,18 @@
         <div class="hidden lg:ml-8 lg:block">
           <div class="flex space-x-4">
             <a
-              href="/"
-              class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white dark:bg-gray-950/50"
+              href="/dashboard"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >Dashboard</a
             >
             <a
-              href="#"
-              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              href="/analytics"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >Analytics</a
             >
             <a
               href="#"
-              class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/history' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >History</a
             >
           </div>
@@ -151,42 +151,15 @@
   >
     <div class="space-y-1 px-2 pt-2 pb-3">
       <a
-        href="/"
-        class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
+        href="/dashboard"
+        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5' }}"
         >Dashboard</a
       >
       <a
-        href="#"
-        class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5"
+        href="/analytics"
+        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5' }}"
         >Analytics</a
       >
-    </div>
-    <div class="border-t border-white/10 pt-4 pb-3">
-      <div class="flex items-center px-5">
-        <div
-          class="size-10 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold"
-        >
-          {{ user.email[0].upper() if user else '?' }}
-        </div>
-        <div class="ml-3">
-          <div class="text-base font-medium text-white">User Account</div>
-          <div class="text-sm font-medium text-gray-400">
-            {{ user.email if user else 'Guest' }}
-          </div>
-        </div>
-      </div>
-      <div class="mt-3 space-y-1 px-2">
-        <a
-          href="#"
-          class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white"
-          >Profile</a
-        >
-        <a
-          href="/logout"
-          class="block rounded-md px-3 py-2 text-base font-medium text-red-400 hover:bg-red-950/30 hover:text-red-300"
-          >Sign out</a
-        >
-      </div>
     </div>
   </el-disclosure>
 </nav>

@@ -15,6 +15,7 @@ from service_layer.dropdown_queries import (
     get_insurance_companies_for_dropdowns,
     get_practice_areas_for_dropdowns,
 )
+from service_layer.kpi_query import get_analytics_payload
 from service_layer.reports_query import get_report_by_id
 
 load_dotenv()
@@ -57,7 +58,7 @@ def auth_callback(request: Request):
     return templates.TemplateResponse("callback.html", {"request": request})
 
 
-@app.get("/welcome")
+@app.get("/")
 def welcome_page(request: Request):
     return templates.TemplateResponse(
         "welcome.html",
@@ -69,7 +70,7 @@ def welcome_page(request: Request):
     )
 
 
-@app.get("/", dependencies=[Depends(get_current_user)])
+@app.get("/dashboard", dependencies=[Depends(get_current_user)])
 def dashboard(
     request: Request,
     user=Depends(get_current_user),
@@ -124,8 +125,24 @@ def prompt(company_id: int, area_id: int, db: Session = Depends(get_db)):
     return result
 
 
+@app.get("/analytics")
+def analytics_page(request: Request, user=Depends(get_current_user)):
+    return templates.TemplateResponse(
+        "analytics.html",
+        {
+            "request": request,
+            "user": user,
+        },
+    )
+
+
+@app.get("/api/analytics")
+def analytics_api(db: Session = Depends(get_db)):
+    return get_analytics_payload(db)
+
+
 @app.get("/logout")
 def logout():
-    response = RedirectResponse(url="/welcome")
+    response = RedirectResponse(url="/")
     response.delete_cookie("access_token")
     return response
