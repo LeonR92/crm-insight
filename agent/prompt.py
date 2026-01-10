@@ -37,7 +37,11 @@ Analyze the relationship between quantitative performance (KPIs) and qualitative
 {reports}
 
 [[ ## reasoning ## ]]
-(In this field, perform a step-by-step analysis: 1. Calculate financial ratios. 2. Compare KPI growth to report sentiment. 3. Identify the three most critical takeaways.)
+(In this field, perform a brief step-by-step audit: 
+1. Compute: Realization Rate = Fees Collected / Incoming Fees. 
+2. Match: Link each KPI to at least one relevant Report-ID.
+3. Plan: List the 3 critical takeaways to be used in the Summary.)
+
 
 [[ ## output ## ]]
 {output}
