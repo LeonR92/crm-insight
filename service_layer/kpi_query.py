@@ -1,9 +1,10 @@
-from typing import List
+from typing import Any, Dict, List
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 
-from database import KPI
+from database import KPI, InsuranceCompany, PracticeArea
 
 
 class KPISchema(BaseModel):
@@ -56,3 +57,56 @@ def get_kpis_by_insurance_company_and_practice_area(
         result.append(data)
 
     return result
+
+
+def _get_raw_kpi_stats(session: Session):
+    """Only responsible for the database join and aggregation."""
+    return (
+        session.query(
+            InsuranceCompany.name.label("company"),
+            PracticeArea.name.label("area"),
+            func.sum(KPI.incoming_fees).label("incoming"),
+            func.sum(KPI.fees_collected).label("collected"),
+            func.sum(KPI.new_mandates).label("mandates"),
+        )
+        .join(KPI, KPI.insurance_company_id == InsuranceCompany.id)
+        .join(PracticeArea, KPI.practice_area_id == PracticeArea.id)
+        .group_by("company", "area")
+        .all()
+    )
+
+
+def get_analytics_payload(session: Session) -> Dict[str, Any]:
+    """Generates the analytics payload for the dashboard.
+
+    :param session: The database session
+    :type session: Session
+    :return: The analytics payload
+    :rtype: Dict[str, Any]
+    """
+    stats = _get_raw_kpi_stats(session)
+
+    area_totals = {}
+    company_mandates = {}
+
+    for row in stats:
+
+        area_totals.setdefault(row.area, {"in": 0, "out": 0})
+        area_totals[row.area]["in"] += row.incoming
+        area_totals[row.area]["out"] += row.collected
+
+        company_mandates[row.company] = (
+            company_mandates.get(row.company, 0) + row.mandates
+        )
+
+    return {
+        "bar": {
+            "labels": list(area_totals.keys()),
+            "incoming": [v["in"] for v in area_totals.values()],
+            "collected": [v["out"] for v in area_totals.values()],
+        },
+        "donut": {
+            "labels": list(company_mandates.keys()),
+            "series": list(company_mandates.values()),
+        },
+    }

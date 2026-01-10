@@ -15,6 +15,7 @@ from service_layer.dropdown_queries import (
     get_insurance_companies_for_dropdowns,
     get_practice_areas_for_dropdowns,
 )
+from service_layer.kpi_query import get_analytics_payload
 from service_layer.reports_query import get_report_by_id
 
 load_dotenv()
@@ -133,6 +134,11 @@ def analytics_page(request: Request, user=Depends(get_current_user)):
             "user": user,
         },
     )
+
+
+@app.get("/api/analytics")
+def analytics_api(db: Session = Depends(get_db)):
+    return get_analytics_payload(db)
 
 
 @app.get("/logout")

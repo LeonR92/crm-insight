@@ -3,16 +3,276 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+      type="module"
+    ></script>
 
-    <title>Analytics</title>
+    <title>Analytics | CRM Insights</title>
+    <style>
+      /* Tooltip contrast fixes */
+      .apexcharts-tooltip.apexcharts-theme-light {
+        background: #ffffff !important;
+        color: #18181b !important;
+        border: 1px solid #e4e4e7 !important;
+      }
+
+      .apexcharts-tooltip.apexcharts-theme-dark {
+        background: #18181b !important;
+        color: #f4f4f5 !important;
+        border: 1px solid #3f3f46 !important;
+      }
+
+      .apexcharts-tooltip-title {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(128, 128, 128, 0.2) !important;
+      }
+    </style>
   </head>
-  <body class="dark:bg-gray-900 dark:text-white min-h-screen">
+  <body
+    class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen transition-colors duration-200"
+  >
     {% include 'navbar.html' %}
 
-    <div class="px-4 sm:px-6 lg:px-8 mt-8 container mx-auto">
-      <h1 class="text-3xl font-bold mb-6">Analytics Page</h1>
-      <p class="text-lg">This is where analytics content will go.</p>
-    </div>
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <div class="text-center mb-12">
+        <h2
+          class="text-3xl font-extrabold tracking-tight text-zinc-900 dark:text-white sm:text-4xl"
+        >
+          Performance Analytics
+        </h2>
+        <p class="mt-3 text-lg text-zinc-500 dark:text-zinc-400">
+          Enterprise-wide insights across insurance partners and practice areas.
+        </p>
+      </div>
+
+      <dl
+        class="mb-12 grid grid-cols-1 gap-0.5 overflow-hidden rounded-2xl text-center sm:grid-cols-2 lg:grid-cols-4 border border-zinc-200 dark:border-zinc-800"
+      >
+        <div class="flex flex-col bg-zinc-400/5 p-8 dark:bg-white/5">
+          <dt class="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            Total Mandates
+          </dt>
+          <dd
+            class="order-first text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white"
+            id="stat-mandates"
+          >
+            --
+          </dd>
+        </div>
+        <div class="flex flex-col bg-zinc-400/5 p-8 dark:bg-white/5">
+          <dt class="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            Incoming Fees
+          </dt>
+          <dd
+            class="order-first text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white"
+            id="stat-incoming"
+          >
+            --
+          </dd>
+        </div>
+        <div class="flex flex-col bg-zinc-400/5 p-8 dark:bg-white/5">
+          <dt class="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            Fees Collected
+          </dt>
+          <dd
+            class="order-first text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white"
+            id="stat-collected"
+          >
+            --
+          </dd>
+        </div>
+        <div class="flex flex-col bg-zinc-400/5 p-8 dark:bg-white/5">
+          <dt class="text-sm font-semibold text-zinc-600 dark:text-zinc-400">
+            Collection Rate
+          </dt>
+          <dd
+            class="order-first text-3xl font-semibold tracking-tight text-zinc-900 dark:text-white"
+            id="stat-rate"
+          >
+            --
+          </dd>
+        </div>
+      </dl>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div
+          class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm"
+        >
+          <h3
+            class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6"
+          >
+            Financials by Practice Area
+          </h3>
+          <div id="bar-chart" class="min-h-[350px]"></div>
+        </div>
+
+        <div
+          class="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-6 shadow-sm"
+        >
+          <h3
+            class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-6"
+          >
+            Mandate Share by Company
+          </h3>
+          <div id="donut-chart" class="min-h-[350px]"></div>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      async function initCharts() {
+        try {
+          const response = await fetch("/api/analytics");
+          const data = await response.json();
+
+          const isDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          const labelColor = isDark ? "#A1A1AA" : "#374151";
+          const gridColor = isDark ? "#27272A" : "#F4F4F5";
+          const primaryColor = "#6366f1";
+
+          // --- Stats Logic ---
+          const totalIncoming = (data.bar?.incoming ?? []).reduce(
+            (a, b) => a + b,
+            0
+          );
+          const totalCollected = (data.bar?.collected ?? []).reduce(
+            (a, b) => a + b,
+            0
+          );
+          const totalMandates = (data.donut?.series ?? []).reduce(
+            (a, b) => a + b,
+            0
+          );
+
+          document.getElementById("stat-mandates").innerText =
+            totalMandates.toLocaleString();
+          document.getElementById("stat-incoming").innerText =
+            "$" + totalIncoming.toLocaleString();
+          document.getElementById("stat-collected").innerText =
+            "$" + totalCollected.toLocaleString();
+          document.getElementById("stat-rate").innerText =
+            totalIncoming > 0
+              ? ((totalCollected / totalIncoming) * 100).toFixed(1) + "%"
+              : "0%";
+
+          // --- SORT DONUT DATA DESCENDING ---
+          const combinedDonut = (data.donut?.labels ?? []).map(
+            (label, index) => {
+              return {
+                label: label,
+                value: data.donut.series[index] || 0,
+              };
+            }
+          );
+
+          // Sort by value highest to lowest
+          combinedDonut.sort((a, b) => b.value - a.value);
+
+          const sortedDonutLabels = combinedDonut.map((item) => item.label);
+          const sortedDonutSeries = combinedDonut.map((item) => item.value);
+
+          // --- BAR CHART CONFIG ---
+          const barOptions = {
+            series: [
+              { name: "Incoming", data: data.bar?.incoming ?? [] },
+              { name: "Collected", data: data.bar?.collected ?? [] },
+            ],
+            chart: {
+              type: "bar",
+              height: 350,
+              toolbar: { show: false },
+              fontFamily: "inherit",
+              foreColor: labelColor,
+            },
+            colors: [primaryColor, isDark ? "#3f3f46" : "#d4d4d8"],
+            plotOptions: {
+              bar: { borderRadius: 6, columnWidth: "50%" },
+            },
+            dataLabels: { enabled: false },
+            xaxis: {
+              categories: data.bar?.labels ?? [],
+              axisBorder: { show: false },
+              axisTicks: { show: false },
+            },
+            grid: { borderColor: gridColor, strokeDashArray: 4 },
+            legend: { position: "top", horizontalAlign: "right" },
+            tooltip: {
+              enabled: true,
+              theme: isDark ? "dark" : "light",
+              shared: true,
+              intersect: false,
+            },
+          };
+
+          // --- DONUT CHART CONFIG ---
+          const donutOptions = {
+            series: sortedDonutSeries,
+            labels: sortedDonutLabels,
+            chart: {
+              type: "donut",
+              height: 350,
+              foreColor: labelColor,
+            },
+            fill: {
+              colors: [primaryColor], // Keeps uniform color
+            },
+            legend: {
+              position: "bottom",
+              markers: { fillColors: [primaryColor] },
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: [isDark ? "#18181b" : "#ffffff"],
+            },
+            plotOptions: {
+              pie: {
+                startAngle: 0, // Starts the biggest slice at 12 o'clock
+                donut: {
+                  size: "72%",
+                  labels: {
+                    show: true,
+                    name: { show: true, color: labelColor },
+                    value: {
+                      show: true,
+                      color: isDark ? "#FFFFFF" : "#374151",
+                    },
+                    total: {
+                      show: true,
+                      label: "Total Mandates",
+                      color: labelColor,
+                      formatter: (w) =>
+                        w.globals.seriesTotals.reduce((a, b) => a + b, 0),
+                    },
+                  },
+                },
+              },
+            },
+            tooltip: {
+              theme: isDark ? "dark" : "light",
+              fillSeriesColor: false,
+            },
+          };
+
+          new ApexCharts(
+            document.querySelector("#bar-chart"),
+            barOptions
+          ).render();
+          new ApexCharts(
+            document.querySelector("#donut-chart"),
+            donutOptions
+          ).render();
+        } catch (error) {
+          console.error("Initialization Error:", error);
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", initCharts);
+    </script>
   </body>
 </html>
