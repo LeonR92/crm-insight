@@ -8,8 +8,7 @@
       const token = params.get("access_token");
 
       if (token) {
-        document.cookie =
-          "access_token=" + token + "; Path=/; Max-Age=3600; SameSite=Lax";
+        document.cookie = "access_token=" + token + "; Path=/; Max-Age=3600";
 
         console.log("Cookie set successfully.");
 
