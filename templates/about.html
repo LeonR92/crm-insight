@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>TypeSafe CRM | Agentic Intelligence</title>
+  </head>
+  <body
+    class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen"
+  >
+    {% include 'navbar.html' %}
+
+    <div class="py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:text-center">
+          <h2
+            class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400"
+          >
+            Agentic AI
+          </h2>
+          <p
+            class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance dark:text-white"
+          >
+            Sophistication made simple.
+          </p>
+          <p class="mt-6 text-lg/8 text-gray-600 dark:text-gray-300">
+            Powered by Pydantic AI, our platform transforms messy customer
+            interactions into validated, structured data. Deploy local LLMs that
+            actually understand your business logic.
+          </p>
+        </div>
+        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+          <dl
+            class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3"
+          >
+            <div class="flex flex-col">
+              <dt
+                class="flex items-center gap-x-3 text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  data-slot="icon"
+                  aria-hidden="true"
+                  class="size-5 flex-none text-indigo-600 dark:text-indigo-400"
+                >
+                  <path
+                    d="M5.5 17a4.5 4.5 0 0 1-1.44-8.765 4.5 4.5 0 0 1 8.302-3.046 3.5 3.5 0 0 1 4.504 4.272A4 4 0 0 1 15 17H5.5Zm3.75-2.75a.75.75 0 0 0 1.5 0V9.66l1.95 2.1a.75.75 0 1 0 1.1-1.02l-3.25-3.5a.75.75 0 0 0-1.1 0l-3.25 3.5a.75.75 0 1 0 1.1 1.02l1.95-2.1v4.59Z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                Local deployment
+              </dt>
+              <dd
+                class="mt-4 flex flex-auto flex-col text-base/7 text-gray-600 dark:text-gray-400"
+              >
+                <p class="flex-auto">
+                  Keep your customer data where it belongs. Deploy our agentic
+                  models on-premise with zero data leakage to third-party
+                  providers.
+                </p>
+                <p class="mt-6">
+                  <a
+                    href="#contact"
+                    class="text-sm/6 font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    >Contact us<span aria-hidden="true">→</span></a
+                  >
+                </p>
+              </dd>
+            </div>
+            <div class="flex flex-col">
+              <dt
+                class="flex items-center gap-x-3 text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  data-slot="icon"
+                  aria-hidden="true"
+                  class="size-5 flex-none text-indigo-600 dark:text-indigo-400"
+                >
+                  <path
+                    d="M10 1a4.5 4.5 0 0 0-4.5 4.5V9H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2h-.5V5.5A4.5 4.5 0 0 0 10 1Zm3 8V5.5a3 3 0 1 0-6 0V9h6Z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                Enterprise Ready
+              </dt>
+              <dd
+                class="mt-4 flex flex-auto flex-col text-base/7 text-gray-600 dark:text-gray-400"
+              >
+                <p class="flex-auto">
+                  Seamlessly scale with built-in SSO, role-based access control,
+                  and full audit logs. Designed to meet the compliance needs of
+                  the modern ecommerce enterprise.
+                </p>
+                <p class="mt-6">
+                  <a
+                    href="#contact"
+                    class="text-sm/6 font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    >Contact us <span aria-hidden="true">→</span></a
+                  >
+                </p>
+              </dd>
+            </div>
+            <div class="flex flex-col">
+              <dt
+                class="flex items-center gap-x-3 text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                <svg
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  data-slot="icon"
+                  aria-hidden="true"
+                  class="size-5 flex-none text-indigo-600 dark:text-indigo-400"
+                >
+                  <path
+                    d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.433a.75.75 0 0 0 0-1.5H3.989a.75.75 0 0 0-.75.75v4.242a.75.75 0 0 0 1.5 0v-2.43l.31.31a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm1.23-3.723a.75.75 0 0 0 .219-.53V2.929a.75.75 0 0 0-1.5 0V5.36l-.31-.31A7 7 0 0 0 3.239 8.188a.75.75 0 1 0 1.448.389A5.5 5.5 0 0 1 13.89 6.11l.311.31h-2.432a.75.75 0 0 0 0 1.5h4.243a.75.75 0 0 0 .53-.219Z"
+                    clip-rule="evenodd"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                Autonomous Logic
+              </dt>
+              <dd
+                class="mt-4 flex flex-auto flex-col text-base/7 text-gray-600 dark:text-gray-400"
+              >
+                <p class="flex-auto">
+                  Our agents don't just chat; they execute. Using Pydantic's
+                  strict schema validation, agents can reliably update records
+                  and trigger complex fulfillment workflows.
+                </p>
+                <p class="mt-6">
+                  <a
+                    href="#contact"
+                    class="text-sm/6 font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+                    >Contact us <span aria-hidden="true">→</span></a
+                  >
+                </p>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <section class="relative" id="contact">
+      <div class="lg:absolute lg:inset-0 lg:left-1/2">
+        <img
+          src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-x=.4&w=2560&h=3413&&q=80"
+          alt="Office background"
+          class="h-64 w-full bg-gray-50 object-cover sm:h-80 lg:absolute lg:h-full dark:bg-gray-800"
+        />
+      </div>
+      <div
+        class="pt-16 pb-24 sm:pt-24 sm:pb-32 lg:mx-auto lg:grid lg:max-w-7xl lg:grid-cols-2 lg:pt-32"
+      >
+        <div class="px-6 lg:px-8">
+          <div class="mx-auto max-w-xl lg:mx-0 lg:max-w-lg">
+            <h2
+              class="text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl dark:text-white"
+            >
+              Deploy your first agent
+            </h2>
+            <p class="mt-2 text-lg/8 text-gray-600 dark:text-gray-400">
+              Ready to automate your sales pipeline with structured
+              intelligence? Tell us about your stack and let's build something
+              better.
+            </p>
+            <form action="#" method="POST" class="mt-16">
+              <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div>
+                  <label
+                    for="first-name"
+                    class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                    >First name</label
+                  >
+                  <div class="mt-2.5">
+                    <input
+                      id="first-name"
+                      type="text"
+                      name="first-name"
+                      placeholder="Jane"
+                      autocomplete="given-name"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label
+                    for="last-name"
+                    class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                    >Last name</label
+                  >
+                  <div class="mt-2.5">
+                    <input
+                      id="last-name"
+                      type="text"
+                      name="last-name"
+                      placeholder="Smith"
+                      autocomplete="family-name"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div class="sm:col-span-2">
+                  <label
+                    for="email"
+                    class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                    >Work Email</label
+                  >
+                  <div class="mt-2.5">
+                    <input
+                      id="email"
+                      type="email"
+                      name="email"
+                      placeholder="jane@company.com"
+                      autocomplete="email"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div class="sm:col-span-2">
+                  <label
+                    for="company"
+                    class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                    >Company</label
+                  >
+                  <div class="mt-2.5">
+                    <input
+                      id="company"
+                      type="text"
+                      name="company"
+                      placeholder="Acme Corp"
+                      autocomplete="organization"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div class="sm:col-span-2">
+                  <div class="flex justify-between text-sm/6">
+                    <label
+                      for="phone"
+                      class="block font-semibold text-gray-900 dark:text-white"
+                      >Phone</label
+                    >
+                    <p
+                      id="phone-description"
+                      class="text-gray-400 dark:text-gray-500"
+                    >
+                      Optional
+                    </p>
+                  </div>
+                  <div class="mt-2.5">
+                    <input
+                      id="phone"
+                      type="tel"
+                      name="phone"
+                      autocomplete="tel"
+                      aria-describedby="phone-description"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    />
+                  </div>
+                </div>
+                <div class="sm:col-span-2">
+                  <div class="flex justify-between text-sm/6">
+                    <label
+                      for="message"
+                      class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                      >What are you looking to automate?</label
+                    >
+                    <p
+                      id="message-description"
+                      class="text-gray-400 dark:text-gray-500"
+                    >
+                      Max 500 characters
+                    </p>
+                  </div>
+                  <div class="mt-2.5">
+                    <textarea
+                      id="message"
+                      name="message"
+                      rows="4"
+                      aria-describedby="message-description"
+                      class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
+                    ></textarea>
+                  </div>
+                </div>
+                <fieldset class="sm:col-span-2">
+                  <legend
+                    class="block text-sm/6 font-semibold text-gray-900 dark:text-white"
+                  >
+                    Expected Annual CRM Budget
+                  </legend>
+                  <div
+                    class="mt-4 space-y-4 text-sm/6 text-gray-600 dark:text-gray-400"
+                  >
+                    <div class="flex gap-x-2.5">
+                      <input
+                        id="budget-under-25k"
+                        type="radio"
+                        name="budget"
+                        value="under_25k"
+                        checked
+                        class="relative mt-1 size-4 appearance-none rounded-full border border-gray-300 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-gray-600 dark:before:bg-white dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/10 dark:disabled:bg-gray-800/50 dark:disabled:before:bg-gray-600 forced-colors:appearance-auto forced-colors:before:hidden"
+                      />
+                      <label for="budget-under-25k"
+                        >Mid-Market (Less than $50K)</label
+                      >
+                    </div>
+                    <div class="flex gap-x-2.5">
+                      <input
+                        id="budget-25k-50k"
+                        type="radio"
+                        name="budget"
+                        value="25k-50k"
+                        class="relative mt-1 size-4 appearance-none rounded-full border border-gray-300 before:absolute before:inset-1 before:rounded-full before:bg-white not-checked:before:hidden checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:before:bg-gray-400 dark:border-gray-600 dark:before:bg-white dark:checked:border-indigo-500 dark:checked:bg-indigo-500 dark:focus-visible:outline-indigo-500 dark:disabled:border-white/10 dark:disabled:bg-gray-800/50 dark:disabled:before:bg-gray-600 forced-colors:appearance-auto forced-colors:before:hidden"
+                      />
+                      <label for="budget-25k-50k"
+                        >Enterprise ($50K – $250K)</label
+                      >
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+              <div
+                class="mt-10 flex justify-end border-t border-gray-900/10 pt-8 dark:border-white/10"
+              >
+                <button
+                  type="submit"
+                  class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500"
+                >
+                  Send message
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

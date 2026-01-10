@@ -158,6 +158,11 @@ def profile(request: Request, user=Depends(get_current_user)):
     )
 
 
+@app.get("/about")
+def about(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})
+
+
 @app.get("/logout")
 def logout():
     response = RedirectResponse(url="/")
