@@ -7,7 +7,14 @@ from sqlalchemy.orm import declarative_base, relationship, scoped_session, sessi
 load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL, echo=True)
+engine = create_engine(
+    DATABASE_URL,
+    echo=True,
+    pool_pre_ping=True,
+    pool_recycle=3600,
+    pool_size=10,
+    max_overflow=20,
+)
 session_factory = sessionmaker(bind=engine)
 session = scoped_session(session_factory)
 
