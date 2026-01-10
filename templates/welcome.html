@@ -303,7 +303,7 @@
         const { data, error } = await sb.auth.signInWithOtp({
           email: email,
           options: {
-            emailRedirectTo: window.location.origin,
+            emailRedirectTo: window.location.origin+ "/auth/callback",,
           },
         });
 
