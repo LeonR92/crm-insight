@@ -11,8 +11,8 @@ engine = create_engine(
     DATABASE_URL,
     echo=True,
     pool_pre_ping=True,
-    pool_recycle=3600,
-    pool_size=10,
+    pool_recycle=300,
+    pool_size=1,
     max_overflow=20,
 )
 session_factory = sessionmaker(bind=engine)
