@@ -3,9 +3,10 @@ import os
 import fastapi
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
+from starlette.middleware.base import BaseHTTPMiddleware
 from supabase import Client, create_client
 
 from agent.agent import run_simple_360
@@ -14,8 +15,7 @@ from service_layer.dropdown_queries import (
     get_insurance_companies_for_dropdowns,
     get_practice_areas_for_dropdowns,
 )
-from service_layer.kpi_query import get_kpis_by_insurance_company_and_practice_area
-from service_layer.reports_query import get_report_analysis_payload, get_report_by_id
+from service_layer.reports_query import get_report_by_id
 
 load_dotenv()
 
@@ -29,6 +29,20 @@ templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
 
+class AuthRedirectMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+
+        if response.status_code == 401:
+            if "text/html" in request.headers.get("Accept", ""):
+                return RedirectResponse(url="/welcome")
+
+        return response
+
+
+app.add_middleware(AuthRedirectMiddleware)
+
+
 def get_current_user(request: Request):
     token = request.cookies.get("access_token")
     if not token:
@@ -38,41 +52,21 @@ def get_current_user(request: Request):
 
     if not token:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Log in required"
         )
 
     try:
-        # 2. Ask Supabase to verify the token
         user_data = supabase.auth.get_user(token)
         return user_data.user
     except Exception:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired session",
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired"
         )
-
-
-def require_role(allowed_roles: list[str]):
-    def role_checker(user=Depends(get_current_user)):
-        user_role = user.app_metadata.get("role", "user")
-        if user_role not in allowed_roles:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Role '{user_role}' does not have access here.",
-            )
-        return user
-
-    return role_checker
 
 
 @app.get("/auth/callback")
 def auth_callback(request: Request):
     return templates.TemplateResponse("callback.html", {"request": request})
-
-
-@app.get("/me")
-def read_me(user=Depends(get_current_user)):
-    return {"email": user.email, "role": user.app_metadata.get("role")}
 
 
 @app.get("/welcome")
@@ -87,8 +81,8 @@ def welcome_page(request: Request):
     )
 
 
-@app.get("/")
-def hello_world(request: Request):
+@app.get("/", dependencies=[Depends(get_current_user)])
+def dashboard(request: Request):
     insurance_companies = get_insurance_companies_for_dropdowns(session)
     practice_areas = get_practice_areas_for_dropdowns(session)
     return templates.TemplateResponse(
@@ -102,23 +96,11 @@ def hello_world(request: Request):
 
 
 @app.get(
-    "/overview/{company_id}/{area_id}",
-    summary="Get company report overview",
+    "/report/{report_id}",
+    response_class=HTMLResponse,
     tags=["Reports"],
+    dependencies=[Depends(get_current_user)],
 )
-def get_report_overview(
-    company_id: int,
-    area_id: int,
-):
-    kpis = get_kpis_by_insurance_company_and_practice_area(session, company_id, area_id)
-    reports = get_report_analysis_payload(session, company_id, area_id)
-
-    if not kpis and not reports:
-        raise fastapi.HTTPException(status_code=404, detail="Data not found")
-    return {"kpis": kpis, "reports": reports}
-
-
-@app.get("/report/{report_id}", response_class=HTMLResponse, tags=["Reports"])
 def get_specific_report(request: Request, report_id: int):
     report = get_report_by_id(session, report_id)
 
@@ -134,8 +116,9 @@ def get_specific_report(request: Request, report_id: int):
     "/prompt/{company_id}/{area_id}",
     summary="Get company and area id prompt",
     tags=["Prompt"],
+    dependencies=[Depends(get_current_user)],
 )
-def prompt_test(
+def prompt(
     company_id: int,
     area_id: int,
 ):
