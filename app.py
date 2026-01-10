@@ -141,6 +141,23 @@ def analytics_api(db: Session = Depends(get_db)):
     return get_analytics_payload(db)
 
 
+@app.get("/profile")
+def profile_page(request: Request, user=Depends(get_current_user)):
+    if not user:
+        return templates.TemplateResponse(
+            "profile.html", {"request": request, "user": {}, "metadata": {}}
+        )
+
+    return templates.TemplateResponse(
+        "profile.html",
+        {
+            "request": request,
+            "user": user,
+            "metadata": getattr(user, "user_metadata", {}),  # Safe access
+        },
+    )
+
+
 @app.get("/logout")
 def logout():
     response = RedirectResponse(url="/")

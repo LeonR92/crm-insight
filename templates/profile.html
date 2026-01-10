@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <hr />
+    <h3>Debug User Data:</h3>
+    <pre style="background: #f4f4f4; padding: 10px; border: 1px solid #ccc">
+{{ user | attr('__dict__') if user.__dict__ else user }}
+</pre
+    >
+  </body>
+</html>
