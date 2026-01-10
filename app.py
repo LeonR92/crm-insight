@@ -153,7 +153,7 @@ def profile_page(request: Request, user=Depends(get_current_user)):
         {
             "request": request,
             "user": user,
-            "metadata": getattr(user, "user_metadata", {}),  # Safe access
+            "metadata": getattr(user, "user_metadata", {}),
         },
     )
 

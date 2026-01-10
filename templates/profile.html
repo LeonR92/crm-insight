@@ -6,11 +6,32 @@
     <title>Document</title>
   </head>
   <body>
+    <h1>User Profile</h1>
+
+    {% if user %}
+    <h3>Quick Fields:</h3>
+    <p><strong>ID:</strong> {{ user.id }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
     <hr />
-    <h3>Debug User Data:</h3>
-    <pre style="background: #f4f4f4; padding: 10px; border: 1px solid #ccc">
-{{ user | attr('__dict__') if user.__dict__ else user }}
-</pre
+    <h3>Full Object Dump (Everything):</h3>
+    <pre
+      style="
+        background: #f4f4f4;
+        padding: 10px;
+        border: 1px solid #ccc;
+        white-space: pre-wrap;
+      "
     >
+      {{ user }}
+    </pre>
+
+    {% if user.user_metadata %}
+    <h3>User Metadata:</h3>
+    <pre>{{ user.user_metadata | tojson(indent=2) }}</pre>
+    {% endif %} {% else %}
+    <p style="color: red">No user found. Please log in.</p>
+    <a href="/login">Go to Login</a>
+    {% endif %}
   </body>
 </html>
