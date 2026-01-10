@@ -1,37 +1,263 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-full bg-white dark:bg-gray-900">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Account Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
+      type="module"
+    ></script>
   </head>
-  <body>
-    <h1>User Profile</h1>
+  <body
+    class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen"
+  >
+    {% include 'navbar.html' %}
+    <div class="mx-auto max-w-7xl pt-16 lg:px-8">
+      <main>
+        <header class="px-4 sm:px-6 lg:px-0">
+          <h1
+            class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+          >
+            User Profile
+          </h1>
+          <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Full diagnostic view of your authenticated session and metadata.
+          </p>
+        </header>
 
-    {% if user %}
-    <h3>Quick Fields:</h3>
-    <p><strong>ID:</strong> {{ user.id }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
+        <div class="divide-y divide-gray-200 dark:divide-white/10">
+          <div
+            class="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-0"
+          >
+            <div>
+              <h2
+                class="text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                Profile Information
+              </h2>
+              <p class="mt-1 text-sm/6 text-gray-500 dark:text-gray-400">
+                Primary identity details managed by {{
+                user.app_metadata.provider if (user and user.app_metadata) else
+                'External' }} Auth.
+              </p>
+            </div>
 
-    <hr />
-    <h3>Full Object Dump (Everything):</h3>
-    <pre
-      style="
-        background: #f4f4f4;
-        padding: 10px;
-        border: 1px solid #ccc;
-        white-space: pre-wrap;
-      "
-    >
-      {{ user }}
-    </pre>
+            <div class="md:col-span-2">
+              <div
+                class="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6"
+              >
+                <div class="col-span-full flex items-center gap-x-8">
+                  <img
+                    src="{{ user.user_metadata.avatar_url if (user and user.user_metadata) else 'https://ui-avatars.com/api/?name=User' }}"
+                    alt="Profile Picture"
+                    class="size-24 flex-none rounded-lg bg-gray-100 object-cover outline -outline-offset-1 outline-black/5 dark:bg-gray-800 dark:outline-white/10"
+                  />
+                  <div>
+                    <h3
+                      class="text-lg font-semibold text-gray-900 dark:text-white"
+                    >
+                      {{ user.user_metadata.full_name if (user and
+                      user.user_metadata) else 'Guest User' }}
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      {{ user.email if user else 'Not logged in' }}
+                    </p>
+                  </div>
+                </div>
 
-    {% if user.user_metadata %}
-    <h3>User Metadata:</h3>
-    <pre>{{ user.user_metadata | tojson(indent=2) }}</pre>
-    {% endif %} {% else %}
-    <p style="color: red">No user found. Please log in.</p>
-    <a href="/login">Go to Login</a>
-    {% endif %}
+                <div class="sm:col-span-3">
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-gray-400"
+                    >Email Status</label
+                  >
+                  <div class="mt-2 text-sm text-gray-900 dark:text-white">
+                    {% if user and user.user_metadata and
+                    user.user_metadata.email_verified %}
+                    <span
+                      class="inline-flex items-center gap-x-1.5 text-green-600 dark:text-green-400"
+                    >
+                      <svg
+                        class="h-1.5 w-1.5 fill-current"
+                        viewBox="0 0 6 6"
+                        aria-hidden="true"
+                      >
+                        <circle cx="3" cy="3" r="3" />
+                      </svg>
+                      Verified
+                    </span>
+                    {% else %}
+                    <span class="text-gray-400 italic">Unverified</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="sm:col-span-3">
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-gray-400"
+                    >Account Role</label
+                  >
+                  <div class="mt-2 text-sm text-gray-900 dark:text-white">
+                    {{ user.role if user else 'anonymous' }}
+                  </div>
+                </div>
+
+                <div class="col-span-full">
+                  <label
+                    class="block text-sm font-medium text-gray-500 dark:text-gray-400"
+                    >Supabase User ID</label
+                  >
+                  <div
+                    class="mt-2 font-mono text-xs text-gray-400 bg-gray-50 dark:bg-white/5 p-3 rounded-md ring-1 ring-inset ring-gray-200 dark:ring-white/10"
+                  >
+                    {{ user.id if user else
+                    '00000000-0000-0000-0000-000000000000' }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-0"
+          >
+            <div>
+              <h2
+                class="text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                Security Log
+              </h2>
+              <p class="mt-1 text-sm/6 text-gray-500 dark:text-gray-400">
+                Timestamp data for account activity and session lifecycle.
+              </p>
+            </div>
+
+            <div class="md:col-span-2">
+              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <div
+                  class="rounded-lg border border-gray-200 dark:border-white/10 p-4"
+                >
+                  <dt
+                    class="text-xs font-bold uppercase tracking-wider text-gray-500"
+                  >
+                    Last Signed In
+                  </dt>
+                  <dd class="mt-2 text-sm text-gray-900 dark:text-white">
+                    {{ user.last_sign_in_at.strftime('%Y-%m-%d %H:%M:%S') if
+                    (user and user.last_sign_in_at) else 'Never' }}
+                  </dd>
+                </div>
+                <div
+                  class="rounded-lg border border-gray-200 dark:border-white/10 p-4"
+                >
+                  <dt
+                    class="text-xs font-bold uppercase tracking-wider text-gray-500"
+                  >
+                    Account Created
+                  </dt>
+                  <dd class="mt-2 text-sm text-gray-900 dark:text-white">
+                    {{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') if (user
+                    and user.created_at) else 'N/A' }}
+                  </dd>
+                </div>
+                <div
+                  class="rounded-lg border border-gray-200 dark:border-white/10 p-4"
+                >
+                  <dt
+                    class="text-xs font-bold uppercase tracking-wider text-gray-500"
+                  >
+                    Last Meta Update
+                  </dt>
+                  <dd class="mt-2 text-sm text-gray-900 dark:text-white">
+                    {{ user.updated_at.strftime('%Y-%m-%d %H:%M:%S') if (user
+                    and user.updated_at) else 'N/A' }}
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-0"
+          >
+            <div>
+              <h2
+                class="text-base/7 font-semibold text-gray-900 dark:text-white"
+              >
+                Identities
+              </h2>
+              <p class="mt-1 text-sm/6 text-gray-500 dark:text-gray-400">
+                A list of all authentication methods linked to this UUID.
+              </p>
+            </div>
+
+            <div class="md:col-span-2">
+              <div
+                class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg"
+              >
+                <table
+                  class="min-w-full divide-y divide-gray-300 dark:divide-white/10"
+                >
+                  <thead class="bg-gray-50 dark:bg-white/5">
+                    <tr>
+                      <th
+                        class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 dark:text-white sm:pl-6"
+                      >
+                        Provider
+                      </th>
+                      <th
+                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                      >
+                        Last Login
+                      </th>
+                      <th
+                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-white"
+                      >
+                        ID
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody
+                    class="divide-y divide-gray-200 dark:divide-white/5 bg-white dark:bg-gray-900"
+                  >
+                    {% if user and user.identities %} {% for identity in
+                    user.identities %}
+                    <tr>
+                      <td
+                        class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-indigo-600 dark:text-indigo-400 sm:pl-6 capitalize"
+                      >
+                        {{ identity.provider }}
+                      </td>
+                      <td
+                        class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 dark:text-gray-400"
+                      >
+                        {{ identity.last_sign_in_at.strftime('%Y-%m-%d') if
+                        identity.last_sign_in_at else 'N/A' }}
+                      </td>
+                      <td
+                        class="whitespace-nowrap px-3 py-4 text-xs font-mono text-gray-400"
+                      >
+                        {{ identity.id[:12] }}...
+                      </td>
+                    </tr>
+                    {% endfor %} {% else %}
+                    <tr>
+                      <td
+                        colspan="3"
+                        class="py-4 text-center text-sm text-gray-500 italic"
+                      >
+                        No identity data found.
+                      </td>
+                    </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

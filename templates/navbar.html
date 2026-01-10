@@ -1,55 +1,112 @@
 <nav
-  class="relative bg-gray-800 dark:bg-gray-900/50 dark:after:pointer-events-none dark:after:absolute dark:after:inset-x-0 dark:after:bottom-0 dark:after:h-px dark:after:bg-white/10 shadow-2xl"
+  class="relative bg-gray-800 dark:bg-gray-900/50 shadow-2xl border-b border-white/10"
 >
   <div class="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
     <div class="relative flex h-16 items-center justify-between">
       <div class="flex items-center px-2 lg:px-0">
         <div class="shrink-0 flex items-center">
-          <span class="text-lg font-bold text-white hidden sm:block"
-            >CRM Insights</span
-          >
+          <span class="text-lg font-bold text-white">CRM Insights</span>
         </div>
         <div class="hidden lg:ml-8 lg:block">
           <div class="flex space-x-4">
             <a
               href="/dashboard"
-              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >Dashboard</a
             >
             <a
               href="/analytics"
-              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >Analytics</a
             >
+
             <a
-              href="#"
-              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white dark:bg-gray-950/50' if request.url.path == '/history' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
-              >History</a
+              href="/profile"
+              class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white' if request.url.path == '/profile' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+              >Profile</a
             >
           </div>
         </div>
       </div>
 
       <div class="flex flex-1 justify-center px-2 lg:ml-6 lg:justify-end">
-        <div class="grid w-full max-w-lg grid-cols-1 lg:max-w-xs">
+        <div class="relative w-full max-w-xs">
           <input
             name="search"
             placeholder="Search..."
-            aria-label="Search"
-            class="col-start-1 row-start-1 block w-full rounded-md bg-white/5 py-1.5 pr-3 pl-10 text-base text-white outline outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:text-white focus:outline-2 focus:outline-indigo-500 sm:text-sm/6 transition-all"
+            class="block w-full rounded-md bg-white/5 py-1.5 pl-10 pr-3 text-white ring-1 ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 sm:text-sm/6"
           />
           <svg
-            viewBox="0 0 20 20"
+            class="absolute left-3 top-2 size-4 text-gray-400"
             fill="currentColor"
-            aria-hidden="true"
-            class="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
+            viewBox="0 0 20 20"
           >
             <path
+              fill-rule="evenodd"
               d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z"
               clip-rule="evenodd"
-              fill-rule="evenodd"
             />
           </svg>
+        </div>
+      </div>
+
+      <div class="hidden lg:ml-4 lg:block">
+        <div class="flex items-center">
+          <button
+            type="button"
+            class="rounded-full p-1 text-gray-400 hover:text-white focus:outline-none"
+          >
+            <svg
+              class="size-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
+              />
+            </svg>
+          </button>
+
+          <el-dropdown class="relative ml-4 shrink-0">
+            <button
+              class="relative flex rounded-full bg-gray-800 text-white ring-1 ring-white/10 hover:ring-white/20 group overflow-hidden"
+            >
+              <div
+                class="size-8 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-xs"
+              >
+                {{ user.email[0].upper() if user else '?' }}
+              </div>
+            </button>
+
+            <el-menu
+              anchor="bottom end"
+              popover
+              class="w-56 mt-2 origin-top-right rounded-md bg-gray-800 py-1 shadow-2xl border border-white/10"
+            >
+              <div class="px-4 py-3 border-b border-white/5">
+                <p class="text-xs font-medium text-gray-400">Signed in as</p>
+                <p class="text-sm font-semibold text-white truncate">
+                  {{ user.email if user else 'Guest' }}
+                </p>
+              </div>
+              <a
+                href="/profile"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white"
+                >Your profile</a
+              >
+              <div class="border-t border-white/5 mt-1 pt-1">
+                <a
+                  href="/logout"
+                  class="block px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-950/30 hover:text-red-300"
+                  >Sign out</a
+                >
+              </div>
+            </el-menu>
+          </el-dropdown>
         </div>
       </div>
 
@@ -58,9 +115,8 @@
           type="button"
           command="--toggle"
           commandfor="mobile-menu"
-          class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-indigo-500"
+          class="p-2 text-gray-400 hover:text-white"
         >
-          <span class="sr-only">Open main menu</span>
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -76,90 +132,28 @@
           </svg>
         </button>
       </div>
-
-      <div class="hidden lg:ml-4 lg:block">
-        <div class="flex items-center">
-          <button
-            type="button"
-            class="relative shrink-0 rounded-full p-1 text-gray-400 hover:text-white focus:outline-none"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              class="size-6"
-            >
-              <path
-                d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-
-          <el-dropdown class="relative ml-4 shrink-0">
-            <button
-              class="relative flex rounded-full bg-gray-800 text-white focus:outline-none ring-1 ring-white/10 hover:ring-white/20 transition-all group"
-            >
-              <div
-                class="size-8 rounded-full bg-indigo-600 flex items-center justify-center text-white font-bold text-xs group-hover:bg-indigo-500 transition-colors"
-              >
-                {{ user.email[0].upper() if user else '?' }}
-              </div>
-            </button>
-
-            <el-menu
-              anchor="bottom end"
-              popover
-              class="w-56 origin-top-right rounded-md bg-gray-800 py-1 shadow-2xl border border-white/10 transition data-[closed]:scale-95 data-[closed]:opacity-0"
-            >
-              <div class="px-4 py-3 border-b border-white/5">
-                <p class="text-xs font-medium text-gray-400">Signed in as</p>
-                <p class="text-sm font-semibold text-white truncate">
-                  {{ user.email if user else 'Guest' }}
-                </p>
-              </div>
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
-                >Your profile</a
-              >
-              <a
-                href="#"
-                class="block px-4 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
-                >Settings</a
-              >
-              <div class="border-t border-white/5 mt-1 pt-1">
-                <a
-                  href="/logout"
-                  class="block px-4 py-2 text-sm font-semibold text-red-400 hover:bg-red-950/30 hover:text-red-300 transition-colors"
-                  >Sign out</a
-                >
-              </div>
-            </el-menu>
-          </el-dropdown>
-        </div>
-      </div>
     </div>
   </div>
 
   <el-disclosure
     id="mobile-menu"
     hidden
-    class="lg:hidden bg-gray-800/80 backdrop-blur-md"
+    class="lg:hidden bg-gray-800 border-t border-white/5 px-2 pt-2 pb-3"
   >
-    <div class="space-y-1 px-2 pt-2 pb-3">
-      <a
-        href="/dashboard"
-        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5' }}"
-        >Dashboard</a
-      >
-      <a
-        href="/analytics"
-        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5' }}"
-        >Analytics</a
-      >
-    </div>
+    <a
+      href="/dashboard"
+      class="block rounded-md px-3 py-2 text-base font-medium text-white"
+      >Dashboard</a
+    >
+    <a
+      href="/analytics"
+      class="block rounded-md px-3 py-2 text-base font-medium text-gray-300"
+      >Analytics</a
+    >
+    <a
+      href="/profile"
+      class="block rounded-md px-3 py-2 text-base font-medium text-gray-300"
+      >Profile</a
+    >
   </el-disclosure>
 </nav>
