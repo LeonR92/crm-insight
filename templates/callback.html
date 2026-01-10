@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
   <body>
-    <p>Finalizing login...</p>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <p>Authenticating... Please wait.</p>
     <script>
-      const hash = window.location.hash;
-      if (hash) {
-        const params = new URLSearchParams(hash.substring(1));
-        const accessToken = params.get("access_token");
+      const hash = window.location.hash.substring(1);
+      const params = new URLSearchParams(hash);
+      const token = params.get("access_token");
 
-        if (accessToken) {
-          document.cookie = `access_token=${accessToken}; path=/; SameSite=Lax; max-age=3600`;
+      if (token) {
+        document.cookie =
+          "access_token=" + token + "; Path=/; Max-Age=3600; SameSite=Lax";
 
+        console.log("Cookie set successfully.");
+
+        setTimeout(() => {
           window.location.href = "/";
-        } else {
-          console.error("No access token found in URL");
-        }
+        }, 100);
+      } else {
+        console.error("Token not found in URL.");
+        window.location.href = "/welcome";
       }
     </script>
   </body>
