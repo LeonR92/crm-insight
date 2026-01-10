@@ -1,19 +1,23 @@
 <div class="py-8 sm:py-10 lg:py-12">
-  <h2 class="text-base font-semibold text-gray-900">Please make a selection</h2>
-  <p class="mt-1 text-sm text-gray-600">
+  <h2 class="text-base font-semibold text-gray-900 dark:text-white">
+    Please make a selection
+  </h2>
+  <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
     Choose an insurance company and a practice area to generate insights.
   </p>
 
   <form class="mt-4 sm:mt-6 flex flex-col md:flex-row items-end gap-4">
     <div class="w-full md:flex-1">
-      <label for="company" class="block text-sm font-medium text-gray-700"
+      <label
+        for="company"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >Insurance Company</label
       >
       <div class="mt-2 grid grid-cols-1">
         <select
           id="company"
           name="company"
-          class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pl-3 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pl-3 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
         >
           {% for company in insurance_companies %}
           <option value="{{ company.id }}">{{ company.name }}</option>
@@ -34,14 +38,16 @@
     </div>
 
     <div class="w-full md:flex-1">
-      <label for="area" class="block text-sm font-medium text-gray-700"
+      <label
+        for="area"
+        class="block text-sm font-medium text-gray-700 dark:text-gray-300"
         >Practice Area</label
       >
       <div class="mt-2 grid grid-cols-1">
         <select
           id="area"
           name="area"
-          class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pl-3 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm"
+          class="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pl-3 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:outline-indigo-600 sm:text-sm dark:bg-white/5 dark:text-white dark:outline-white/10 dark:*:bg-gray-800 dark:focus-visible:outline-indigo-500"
         >
           {% for area in practice_areas %}
           <option value="{{ area.id }}">{{ area.name }}</option>

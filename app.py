@@ -3,7 +3,7 @@ import os
 import fastapi
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Request, status
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
 from supabase import Client, create_client
@@ -113,3 +113,10 @@ def prompt(
     if not result:
         raise fastapi.HTTPException(status_code=404, detail="Data not found")
     return result
+
+
+@app.get("/logout")
+def logout():
+    response = RedirectResponse(url="/welcome")
+    response.delete_cookie("access_token")
+    return response
