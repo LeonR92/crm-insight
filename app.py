@@ -6,10 +6,11 @@ from fastapi import Depends, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
+from requests import Session
 from supabase import Client, create_client
 
 from agent.agent import run_simple_360
-from database import session
+from database import get_db
 from service_layer.dropdown_queries import (
     get_insurance_companies_for_dropdowns,
     get_practice_areas_for_dropdowns,
@@ -69,9 +70,14 @@ def welcome_page(request: Request):
 
 
 @app.get("/", dependencies=[Depends(get_current_user)])
-def dashboard(request: Request, user=Depends(get_current_user)):
-    insurance_companies = get_insurance_companies_for_dropdowns(session)
-    practice_areas = get_practice_areas_for_dropdowns(session)
+def dashboard(
+    request: Request,
+    user=Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    insurance_companies = get_insurance_companies_for_dropdowns(db_session=db)
+    practice_areas = get_practice_areas_for_dropdowns(db_session=db)
+
     return templates.TemplateResponse(
         "index.html",
         {
@@ -89,8 +95,10 @@ def dashboard(request: Request, user=Depends(get_current_user)):
     tags=["Reports"],
     dependencies=[Depends(get_current_user)],
 )
-def get_specific_report(request: Request, report_id: int):
-    report = get_report_by_id(session, report_id)
+def get_specific_report(
+    request: Request, report_id: int, db: Session = Depends(get_db)
+):
+    report = get_report_by_id(session=db, report_id=report_id)
 
     if not report:
         raise fastapi.HTTPException(status_code=404, detail="Report not found")
@@ -106,13 +114,13 @@ def get_specific_report(request: Request, report_id: int):
     tags=["Prompt"],
     dependencies=[Depends(get_current_user)],
 )
-def prompt(
-    company_id: int,
-    area_id: int,
-):
-    result = run_simple_360(session, company_id, area_id)
+def prompt(company_id: int, area_id: int, db: Session = Depends(get_db)):
+
+    result = run_simple_360(session=db, company_id=company_id, area_id=area_id)
+
     if not result:
         raise fastapi.HTTPException(status_code=404, detail="Data not found")
+
     return result
 
 
