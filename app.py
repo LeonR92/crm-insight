@@ -57,7 +57,7 @@ def auth_callback(request: Request):
     return templates.TemplateResponse("callback.html", {"request": request})
 
 
-@app.get("/welcome")
+@app.get("/")
 def welcome_page(request: Request):
     return templates.TemplateResponse(
         "welcome.html",
@@ -69,7 +69,7 @@ def welcome_page(request: Request):
     )
 
 
-@app.get("/", dependencies=[Depends(get_current_user)])
+@app.get("/dashboard", dependencies=[Depends(get_current_user)])
 def dashboard(
     request: Request,
     user=Depends(get_current_user),
@@ -126,6 +126,6 @@ def prompt(company_id: int, area_id: int, db: Session = Depends(get_db)):
 
 @app.get("/logout")
 def logout():
-    response = RedirectResponse(url="/welcome")
+    response = RedirectResponse(url="/")
     response.delete_cookie("access_token")
     return response
