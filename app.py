@@ -7,10 +7,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
 from requests import Session
-from supabase import Client, create_client
 
 from agent.agent import run_simple_360
-from database import get_db
+from dependencies import get_current_user, get_db
 from service_layer.dropdown_queries import (
     get_insurance_companies_for_dropdowns,
     get_practice_areas_for_dropdowns,
@@ -21,36 +20,14 @@ from service_layer.reports_query import get_report_by_id
 load_dotenv()
 
 app = fastapi.FastAPI()
-url = os.getenv("SUPABASE_URL")
-key = os.getenv("SUPABASE_ANON_KEY")
-if not url or not key:
-    raise ValueError("Missing Supabase credentials in .env file")
-supabase: Client = create_client(url, key)
+
 templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
 
-def get_current_user(request: Request):
-    if request.url.hostname in ["localhost", "127.0.0.1"]:
-        return None
-    token = request.cookies.get("access_token")
-    if not token:
-        auth_header = request.headers.get("Authorization")
-        if auth_header and auth_header.startswith("Bearer "):
-            token = auth_header.split(" ")[1]
-
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Log in required"
-        )
-
-    try:
-        user_data = supabase.auth.get_user(token)
-        return user_data.user
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired"
-        )
+@app.exception_handler(status.HTTP_401_UNAUTHORIZED)
+async def unauthorized_redirect_handler(request: Request, exc: HTTPException):
+    return RedirectResponse(url="/")
 
 
 @app.get("/auth/callback")
@@ -80,7 +57,7 @@ def dashboard(
     practice_areas = get_practice_areas_for_dropdowns(db_session=db)
 
     return templates.TemplateResponse(
-        "index.html",
+        "dashboard.html",
         {
             "request": request,
             "insurance_companies": insurance_companies,

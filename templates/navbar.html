@@ -5,7 +5,21 @@
     <div class="relative flex h-16 items-center justify-between">
       <div class="flex items-center px-2 lg:px-0">
         <div class="shrink-0 flex items-center">
-          <span class="text-lg font-bold text-white">CRM Insights</span>
+          <svg
+            viewBox="0 0 256 176"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="xMidYMid"
+            class="size-6 text-gray-900 dark:text-white"
+          >
+            <g fill="currentColor" fill-rule="evenodd">
+              <path
+                d="M147.486878,0 L217.568251,175.780074 L256,175.780074 L185.918621,0 L147.486878,0 Z"
+              />
+              <path
+                d="M66.1828124,106.221191 L90.1624677,44.4471185 L114.142128,106.221191 L66.1828124,106.221191 Z M70.0705318,0 L0,175.780074 L39.179211,175.780074 L53.5097704,138.86606 L126.817544,138.86606 L141.145724,175.780074 L180.324935,175.780074 L110.254409,0 L70.0705318,0 Z"
+              />
+            </g>
+          </svg>
         </div>
         <div class="hidden lg:ml-8 lg:block">
           <div class="flex space-x-4">
@@ -19,7 +33,6 @@
               class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
               >Analytics</a
             >
-
             <a
               href="/profile"
               class="rounded-md px-3 py-2 text-sm font-medium transition-colors {{ 'bg-gray-900 text-white' if request.url.path == '/profile' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
@@ -143,22 +156,54 @@
   <el-disclosure
     id="mobile-menu"
     hidden
-    class="lg:hidden bg-gray-800 border-t border-white/5 px-2 pt-2 pb-3"
+    class="lg:hidden bg-gray-800 border-t border-white/5 pb-3"
   >
-    <a
-      href="/dashboard"
-      class="block rounded-md px-3 py-2 text-base font-medium text-white"
-      >Dashboard</a
-    >
-    <a
-      href="/analytics"
-      class="block rounded-md px-3 py-2 text-base font-medium text-gray-300"
-      >Analytics</a
-    >
-    <a
-      href="/profile"
-      class="block rounded-md px-3 py-2 text-base font-medium text-gray-300"
-      >Profile</a
-    >
+    <div class="space-y-1 px-2 pt-2">
+      <a
+        href="/dashboard"
+        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/dashboard' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+        >Dashboard</a
+      >
+      <a
+        href="/analytics"
+        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/analytics' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+        >Analytics</a
+      >
+      <a
+        href="/about"
+        class="block rounded-md px-3 py-2 text-base font-medium {{ 'bg-gray-900 text-white' if request.url.path == '/about' else 'text-gray-300 hover:bg-white/5 hover:text-white' }}"
+        >About us</a
+      >
+    </div>
+
+    <div class="border-t border-white/10 mt-4 pt-4">
+      <div class="flex items-center px-5">
+        <div class="shrink-0">
+          <div
+            class="size-10 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white"
+          >
+            {{ user.email[0].upper() if user else '?' }}
+          </div>
+        </div>
+        <div class="ml-3">
+          <div class="text-base font-medium text-white">
+            {{ user.email if user else 'Guest' }}
+          </div>
+          <div class="text-sm font-medium text-gray-400">Account Settings</div>
+        </div>
+      </div>
+      <div class="mt-3 space-y-1 px-2">
+        <a
+          href="/profile"
+          class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white"
+          >Your Profile</a
+        >
+        <a
+          href="/logout"
+          class="block rounded-md px-3 py-2 text-base font-medium text-red-400 hover:bg-red-950/30"
+          >Sign out</a
+        >
+      </div>
+    </div>
   </el-disclosure>
 </nav>
