@@ -30,6 +30,11 @@ templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
 
+@app.exception_handler(status.HTTP_401_UNAUTHORIZED)
+async def unauthorized_redirect_handler(request: Request, exc: HTTPException):
+    return RedirectResponse(url="/")
+
+
 def get_current_user(request: Request):
     if request.url.hostname in ["localhost", "127.0.0.1"]:
         return None
