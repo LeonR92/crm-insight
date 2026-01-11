@@ -8,7 +8,7 @@
       src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1"
       type="module"
     ></script>
-    <title>TypeSafe Agentic AI</title>
+    <title>About us</title>
   </head>
   <body
     class="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 min-h-screen"
@@ -188,6 +188,7 @@
                       name="first-name"
                       placeholder="Jane"
                       autocomplete="given-name"
+                      required
                       class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                     />
                   </div>
@@ -205,6 +206,7 @@
                       name="last-name"
                       placeholder="Smith"
                       autocomplete="family-name"
+                      required
                       class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                     />
                   </div>
@@ -220,6 +222,7 @@
                       id="email"
                       type="email"
                       name="email"
+                      required
                       placeholder="jane@company.com"
                       autocomplete="email"
                       class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
@@ -288,6 +291,7 @@
                       name="message"
                       rows="4"
                       aria-describedby="message-description"
+                      required
                       class="block w-full rounded-md bg-white px-3.5 py-2 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"
                     ></textarea>
                   </div>
@@ -344,5 +348,22 @@
         </div>
       </div>
     </section>
+
+    <!-- Dummy function -->
+    <script>
+      document.querySelector("form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const firstName = document.getElementById("first-name").value;
+
+        alert(
+          `Thank you, ${
+            firstName || "there"
+          }! Your message has been sent to the us. We'll get back to you soon.`
+        );
+
+        this.reset();
+      });
+    </script>
   </body>
 </html>
