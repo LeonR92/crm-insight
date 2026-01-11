@@ -7,7 +7,6 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.security import HTTPBearer
 from fastapi.templating import Jinja2Templates
 from requests import Session
-from supabase import Client, create_client
 
 from agent.agent import run_simple_360
 from database import get_db
@@ -17,15 +16,12 @@ from service_layer.dropdown_queries import (
 )
 from service_layer.kpi_query import get_analytics_payload
 from service_layer.reports_query import get_report_by_id
+from supabase_client import supabase
 
 load_dotenv()
 
 app = fastapi.FastAPI()
-url = os.getenv("SUPABASE_URL")
-key = os.getenv("SUPABASE_ANON_KEY")
-if not url or not key:
-    raise ValueError("Missing Supabase credentials in .env file")
-supabase: Client = create_client(url, key)
+
 templates = Jinja2Templates(directory="templates")
 security = HTTPBearer()
 
