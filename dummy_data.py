@@ -6,7 +6,6 @@ from faker import Faker
 from sqlalchemy import create_engine, delete
 from sqlalchemy.orm import sessionmaker
 
-# Import your models
 from database import KPI, Base, InsuranceCompany, PracticeArea, Report
 
 # Setup
@@ -90,7 +89,6 @@ def populate_database(number_of_rows: int):
             session.add(kpi)
             active_combinations.append((co, area))
 
-    # 4. Generate Reports based on those valid combinations
     print(f"Generating {number_of_rows} Reports...")
 
     departments = [
@@ -171,7 +169,6 @@ def populate_database(number_of_rows: int):
             else fake.name()
         )
 
-        # Build full content
         base_text = random.choice(report_templates).format(
             area=area.name, person=person, dept=dept, co_name=co.name, city=city
         )
