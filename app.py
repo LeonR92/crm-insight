@@ -93,7 +93,6 @@ def get_specific_report(
     dependencies=[Depends(get_current_user)],
 )
 def prompt(company_id: int, area_id: int, db: Session = Depends(get_db)):
-
     result = run_simple_360(session=db, company_id=company_id, area_id=area_id)
 
     if not result:

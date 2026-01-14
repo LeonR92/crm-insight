@@ -90,7 +90,6 @@ def get_analytics_payload(session: Session) -> Dict[str, Any]:
     company_mandates = {}
 
     for row in stats:
-
         area_totals.setdefault(row.area, {"in": 0, "out": 0})
         area_totals[row.area]["in"] += row.incoming
         area_totals[row.area]["out"] += row.collected
