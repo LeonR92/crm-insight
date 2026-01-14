@@ -1,8 +1,8 @@
 from agent.agent import run_simple_360
-from database import session
+from dependencies import get_db
 
 if __name__ == "__main__":
-
+    session = get_db()
     final_data = run_simple_360(session, 3, 4)
     print(f"Executive Summary: {final_data.final_executive_summary}")
 

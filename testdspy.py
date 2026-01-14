@@ -5,8 +5,6 @@ import dspy
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field, computed_field
 
-# --- 1. SCHEMAS (From your existing code) ---
-
 
 class KPISchema(BaseModel):
     id: str
