@@ -1,6 +1,7 @@
 # crm-insight
 
 **Project URL:** [https://crm-insight.onrender.com/](https://crm-insight.onrender.com/)
+Initial page load requires approximately 30 seconds
 
 ## Executive Summary
 
