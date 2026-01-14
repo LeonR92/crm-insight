@@ -5,7 +5,7 @@ from pydantic_ai import Agent, ModelSettings
 from sqlalchemy.orm import Session
 
 from agent.ai_model import TEMPERATURE, model
-from agent.prompt import PROMPT
+from agent.prompt import PROMPT_V1
 from service_layer.kpi_query import (
     KPISchema,
     get_kpis_by_insurance_company_and_practice_area,
@@ -41,7 +41,7 @@ class Insurance360Output(BaseModel):
 simple_agent = Agent(
     model,
     output_type=Insurance360Output,
-    system_prompt=PROMPT,
+    system_prompt=PROMPT_V1,
     model_settings=ModelSettings(temperature=TEMPERATURE),
 )
 
